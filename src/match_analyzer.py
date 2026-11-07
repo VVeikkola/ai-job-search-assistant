@@ -26,17 +26,18 @@ def analyze_match(job:JobAnalysis, cv:CVAnalysis) -> MatchAnalysis:
     {cv.model_dump_json(indent=2)}
 
     TASK:
-    Evaluate every distinct job requirement.
+    The JOB contains a list of extracted requirements. Each one already
+    has a name, priority ("required" or "preferred") and category.
+
+    Evaluate every requirement in JOB.requirements exactly once.
 
     For each requirement, return a RequirementMatch entry:
-    - name: requirement name
-    - priority: "required" or "preferred"
+    - name: copy the requirement name from JOB.requirements
+    - priority: copy the priority from JOB.requirements unchanged
     - match: "full", "partial", "not_met", or "unknown"
     - evidence: concrete supporting evidence or explanation
 
-    PRIORITY:
-    - required: explicitly mandatory
-    - preferred: optional, desirable, or unclear
+    Do not change priorities, add requirements, or drop requirements.
 
     MATCH CLASSIFICATION:
     - full: CV clearly demonstrates the exact required capability
@@ -54,7 +55,6 @@ def analyze_match(job:JobAnalysis, cv:CVAnalysis) -> MatchAnalysis:
     - Never invent qualifications.
     - Do not treat missing CV information as proof of lacking a skill.
     - Do not duplicate requirements.
-    - Do not invent requirements absent from the job.
 
     IMPORTANT:
     Return a complete requirements list.

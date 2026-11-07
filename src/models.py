@@ -1,12 +1,36 @@
-from pydantic import BaseModel, Field
-from src.scoring import RequirementMatch
 from typing import Literal
+
+from pydantic import BaseModel, Field
+
+from src.scoring import RequirementMatch
+
+
+class JobRequirement(BaseModel):
+    name: str = Field(
+        description="Short requirement name, e.g. Python or 3+ years backend"
+    )
+
+    priority: Literal["required", "preferred"] = Field(
+        description="required = must have; preferred = nice to have"
+    )
+
+    category: Literal[
+        "technical",
+        "experience",
+        "language",
+        "education",
+        "other"
+    ] = Field(
+        description="Requirement type"
+    )
+
 
 class JobAnalysis(BaseModel):
     company: str = Field(description="Company name")
     position: str = Field(description="Job title")
-    required_skills: list[str] = Field(
-        description="Required technical skills"
+    requirements: list[JobRequirement] = Field(
+        default_factory=list,
+        description="Requirements stated in the job posting"
     )
 
 class ProjectExperience(BaseModel):
