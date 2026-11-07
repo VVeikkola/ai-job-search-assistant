@@ -10,7 +10,8 @@ model = ChatOllama(
     model="qwen3.5:9b",
     temperature=0,
     reasoning=False,
-    num_predict=8192
+    num_predict=8192,
+    num_ctx=16384,  # Ollama default (4096) cuts off long CV + job prompts
 )
 
 structured_model = model.with_structured_output(
