@@ -1,9 +1,9 @@
-import json
 from pathlib import Path
 
 from langchain_ollama import ChatOllama
 from src.models import CVAnalysis
 
+CV_CACHE = Path("data/private/cv_analysis.json")
 
 model = ChatOllama(
     model="qwen3.5:9b",
@@ -143,27 +143,24 @@ def analyze_cv(cv_text: str) -> CVAnalysis:
     Always return the languages field.
     """
 
-    result = structured_model.invoke(prompt)
+    return structured_model.invoke(prompt)
 
-    cache_path = Path("data/private/cv_analysis.json")
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
 
-    cache_path.write_text(
-        result.model_dump_json(indent=2),
-        encoding="utf-8"
-    )
+def save_cv_analysis(result: CVAnalysis, path: Path = CV_CACHE) -> None:
+    """Write a CV analysis to disk as JSON."""
 
-    return result
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(result.model_dump_json(indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":
-
-    from pathlib import Path
 
     cv_path = Path("data/private/cv.txt")
     cv_text = cv_path.read_text(encoding="utf-8")
 
     result = analyze_cv(cv_text)
+    save_cv_analysis(result)
+    print(f"Saved CV analysis to {CV_CACHE}")
 
     print("\nTECHNICAL SKILLS:")
     print(result.skills)
