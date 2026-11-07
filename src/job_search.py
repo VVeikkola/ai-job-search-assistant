@@ -143,7 +143,7 @@ def process_jobs(
 
 def main():
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.WARNING,
         format="%(levelname)s %(name)s: %(message)s",
     )
 
