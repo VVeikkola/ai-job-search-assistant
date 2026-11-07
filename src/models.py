@@ -125,6 +125,16 @@ class MatchAnalysis(BaseModel):
         description="Short recommendation about whether to apply"
     )
     score: float | None = Field(default=None, ge=0, le=10)
+    possible_score: float | None = Field(
+        default=None,
+        ge=0,
+        le=10,
+        description="Set by Python scoring: score if all unknowns were met"
+    )
+    unknown_requirements: list[str] = Field(
+        default_factory=list,
+        description="Set by Python scoring: requirements with no evidence"
+    )
     score_reason: str
     requirements: list[RequirementMatch]
 

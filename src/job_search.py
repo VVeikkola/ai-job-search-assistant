@@ -68,6 +68,8 @@ def main():
                 "title": job.title,
                 "company": job.company,
                 "score": score,
+                "possible_score": match.possible_score,
+                "unknown_requirements": match.unknown_requirements,
                 "decision": state["decision"],
                 "reason": match.recommendation,
                 "project_suggestion": state.get(
@@ -82,6 +84,7 @@ def main():
             save_results(results)
 
             print(f"Score: {score}/10")
+            print(f"Possible score: {match.possible_score}/10")
             print(f"Decision: {state['decision']}")
 
             if result["project_suggestion"]:
@@ -115,6 +118,14 @@ def main():
         )
 
         print(f"Score: {result['score']}/10")
+        print(f"Possible score: {result['possible_score']}/10")
+
+        if result["unknown_requirements"]:
+            print(
+                "Unknown: "
+                + ", ".join(result["unknown_requirements"])
+            )
+
         print(f"Decision: {result['decision']}")
         print(f"Reason: {result['reason']}")
 

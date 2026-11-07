@@ -66,3 +66,46 @@ def test_empty_requirements():
     result = calculate_score([])
 
     assert result["score"] is None
+
+def _match(requirements):
+    from src.models import MatchAnalysis
+
+    return MatchAnalysis(
+        matching_skills=[],
+        missing_skills=[],
+        recommendation="",
+        score=0,
+        score_reason="Pending Python scoring",
+        requirements=requirements,
+    )
+
+
+def test_score_node_sets_possible_score_without_mutating_input():
+    from src.graph import score_node
+
+    original = _match([
+        RequirementMatch(name="Python", priority="required", match="full"),
+        RequirementMatch(name="Azure", priority="preferred", match="unknown"),
+    ])
+
+    update = score_node({"match": original})
+    match = update["match"]
+
+    assert match.score == 7.5
+    assert match.possible_score == 10.0
+    assert match.unknown_requirements == ["Azure"]
+    assert update["decision"] == "Recommended to apply"
+
+    assert match is not original
+    assert original.score == 0
+    assert original.possible_score is None
+
+
+def test_score_node_without_requirements():
+    from src.graph import score_node
+
+    update = score_node({"match": _match([])})
+
+    assert update["match"].score is None
+    assert update["match"].possible_score is None
+    assert update["decision"] == "Not enough information"

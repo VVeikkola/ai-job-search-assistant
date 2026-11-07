@@ -28,31 +28,31 @@ def match_node(state: JobSearchState):
 
 
 def score_node(state: JobSearchState):
-    match = state["match"]
-
-    result = calculate_score(match.requirements)
+    result = calculate_score(state["match"].requirements)
     score = result["score"]
-
-    match.score = score
 
     if score is None:
         decision = "Not enough information"
-        match.score_reason = "No job requirements available for scoring."
-
-    elif score >= 7:
-        decision = "Recommended to apply"
-
-    elif score >= 5:
-        decision = "Consider applying"
-
+        score_reason = "No job requirements available for scoring."
     else:
-        decision = "Low priority"
-
-    if score is not None:
-        match.score_reason = (
+        score_reason = (
             "Calculated using weighted job requirements. "
             "Required skills have weight 3 and preferred skills weight 1."
         )
+
+        if score >= 7:
+            decision = "Recommended to apply"
+        elif score >= 5:
+            decision = "Consider applying"
+        else:
+            decision = "Low priority"
+
+    match = state["match"].model_copy(update={
+        "score": score,
+        "possible_score": result["possible_score"],
+        "unknown_requirements": result["unknown_requirements"],
+        "score_reason": score_reason,
+    })
 
     return {
         "match": match,
