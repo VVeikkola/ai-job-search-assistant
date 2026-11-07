@@ -1,0 +1,10 @@
+{
+  "posting": "Pixel Harbor is looking for a Frontend Developer to join our product team (remote within Finland).\n\nMust have:\n- React\n- TypeScript\n- Experience building accessible web interfaces\n\nWe value:\n- Next.js\n- Experience with design systems\n\nYour benefits: flexible hours, lunch benefit, and a modern office.",
+  "expected": [
+    {"name": "React", "priority": "required"},
+    {"name": "TypeScript", "priority": "required"},
+    {"name": "Accessible web interfaces", "priority": "required"},
+    {"name": "Next.js", "priority": "preferred"},
+    {"name": "Design systems", "priority": "preferred"}
+  ]
+}

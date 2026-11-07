@@ -1,0 +1,12 @@
+{
+  "posting": "Northwind Data Oy is hiring a Backend Developer in Oulu.\n\nWhat we expect:\n- Solid Python skills\n- 3+ years of backend development experience\n- Experience with PostgreSQL\n- Fluent English\n\nNice to have:\n- Docker\n- Kubernetes\n- Finnish language skills",
+  "expected": [
+    {"name": "Python", "priority": "required"},
+    {"name": "3+ years backend development", "priority": "required"},
+    {"name": "PostgreSQL", "priority": "required"},
+    {"name": "English", "priority": "required"},
+    {"name": "Docker", "priority": "preferred"},
+    {"name": "Kubernetes", "priority": "preferred"},
+    {"name": "Finnish", "priority": "preferred"}
+  ]
+}

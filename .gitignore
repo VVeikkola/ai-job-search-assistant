@@ -3,3 +3,4 @@ data/private/
 *.db
 __pycache__/
 .venv/
+evals/results/

@@ -1,0 +1,10 @@
+{
+  "posting": "Revontuli Soft Oy hakee ohjelmistokehittäjää Ouluun.\n\nEdellytämme:\n- Hyvää Java-osaamista\n- Vähintään 2 vuoden kokemusta ohjelmistokehityksestä\n- Sujuvaa suomen kielen taitoa\n\nEduksi katsotaan:\n- Spring Boot\n- Kokemus pilvipalveluista (Azure)",
+  "expected": [
+    {"name": "Java", "priority": "required"},
+    {"name": "2+ years software development", "priority": "required"},
+    {"name": "Finnish", "priority": "required"},
+    {"name": "Spring Boot", "priority": "preferred"},
+    {"name": "Azure", "priority": "preferred"}
+  ]
+}

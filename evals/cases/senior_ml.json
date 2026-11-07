@@ -1,0 +1,12 @@
+{
+  "posting": "Aurora Analytics seeks a Senior Machine Learning Engineer.\n\nRequirements:\n- Master's degree in computer science or a related field\n- 5+ years of experience in machine learning\n- PyTorch\n- AWS\n\nBonus:\n- MLOps tooling such as MLflow\n- Published research is a plus",
+  "expected": [
+    {"name": "Master's degree", "priority": "required"},
+    {"name": "5+ years machine learning", "priority": "required"},
+    {"name": "Senior", "priority": "required"},
+    {"name": "PyTorch", "priority": "required"},
+    {"name": "AWS", "priority": "required"},
+    {"name": "MLflow", "priority": "preferred"},
+    {"name": "Published research", "priority": "preferred"}
+  ]
+}

@@ -165,6 +165,14 @@ data/private/job_results.json
 uv run python -m pytest tests/test_scoring.py -v
 ```
 
+### Run the extraction evaluation
+
+Requires Ollama running locally, so it is not part of CI:
+
+```bash
+uv run python -m evals.run_eval
+```
+
 ## How matching and scoring work
 
 The job evaluator assigns each extracted requirement:
