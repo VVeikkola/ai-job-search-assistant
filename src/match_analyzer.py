@@ -1,5 +1,5 @@
 from langchain_ollama import ChatOllama
-from models import CVAnalysis, JobAnalysis, MatchAnalysis
+from src.models import CVAnalysis, JobAnalysis, MatchAnalysis
 
 model = ChatOllama(
     model="qwen3.5:9b",
