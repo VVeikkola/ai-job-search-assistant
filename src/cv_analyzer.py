@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from langchain_ollama import ChatOllama
+
 from src.models import CVAnalysis
 
 CV_CACHE = Path("data/private/cv_analysis.json")

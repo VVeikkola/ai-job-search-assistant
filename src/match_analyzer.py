@@ -1,4 +1,5 @@
 from langchain_ollama import ChatOllama
+
 from src.models import CVAnalysis, JobAnalysis, MatchAnalysis
 
 model = ChatOllama(
@@ -76,8 +77,8 @@ def analyze_match(job:JobAnalysis, cv:CVAnalysis) -> MatchAnalysis:
     return result
 
 if __name__ == "__main__":
-    from src.job_analyzer import analyze_job
     from src.cv_analyzer import analyze_cv
+    from src.job_analyzer import analyze_job
 
     job_text = """Twoday is looking for a Software Developer.
     Required skills: Python, Azure, CI/CD.

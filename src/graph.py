@@ -1,11 +1,11 @@
 from typing import TypedDict
 
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import END, START, StateGraph
 
 from src.job_analyzer import analyze_job
 from src.match_analyzer import analyze_match
+from src.models import CVAnalysis, JobAnalysis, MatchAnalysis
 from src.scoring import calculate_score
-from src.models import JobAnalysis, CVAnalysis, MatchAnalysis
 
 
 class JobSearchState(TypedDict, total=False):

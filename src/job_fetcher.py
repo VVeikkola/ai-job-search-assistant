@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 from src.models import JobPosting
 
-
 load_dotenv()
 
 BASE_URL = "https://api.headcountlabs.com/v1/jobs"

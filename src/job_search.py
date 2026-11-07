@@ -5,7 +5,6 @@ from src.graph import graph
 from src.job_fetcher import search_jobs
 from src.models import CVAnalysis
 
-
 CV_CACHE = Path("data/private/cv_analysis.json")
 OUTPUT_FILE = Path("data/private/job_results.json")
 

@@ -2,7 +2,6 @@ from langchain_ollama import ChatOllama
 
 from src.models import JobAnalysis
 
-
 model = ChatOllama(
     model="qwen3.5:9b",
     temperature=0,
