@@ -1,7 +1,7 @@
 [project]
 name = "ai-job-search-assistant"
 version = "0.1.0"
-description = "Add your description here"
+description = "Local LangGraph + Ollama assistant that matches job postings to a CV with explainable scoring"
 readme = "README.md"
 authors = [
     { name = "VVeikkola", email = "valtteri.veikkola@gmail.com" }
@@ -15,9 +15,6 @@ dependencies = [
     "pydantic>=2.14.3",
     "python-dotenv>=1.2.4",
 ]
-
-[project.scripts]
-ai-job-search-assistant = "ai_job_search_assistant:main"
 
 [tool.uv]
 package = false

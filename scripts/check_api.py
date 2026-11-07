@@ -1,3 +1,8 @@
+"""Manual smoke check for the Headcount Labs API.
+
+Run with: uv run python scripts/check_api.py
+"""
+
 import os
 
 import httpx
