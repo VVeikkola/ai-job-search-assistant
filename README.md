@@ -190,7 +190,9 @@ Each file in `evals/cases/` holds a job posting and its expected requirements (n
 
 The cases include three example postings and three failure scenarios: a near-empty posting, a posting with a prompt-injection line, and a posting in Finnish. A JSON report is written to `evals/results/` (gitignored).
 
-The example cases and labels are illustrative and written for this project. Small numbers on six short postings say little about real-world accuracy; replace or extend them with hand-labelled real postings.
+> **About the evals:** The evaluation step was added on a suggestion from Claude Code (Anthropic's AI coding assistant), which I used during development. Claude implemented the harness and the example cases, and I integrated them into the project as a way to measure extraction quality instead of judging it by eye.
+>
+> The example postings and labels are illustrative. Six short cases say little about real-world accuracy, so the next step is to extend the set with hand-labelled real job postings.
 
 ## How matching and scoring work
 
