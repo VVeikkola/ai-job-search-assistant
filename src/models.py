@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from src.scoring import RequirementMatch
+from typing import Literal
 
 class JobAnalysis(BaseModel):
     company: str = Field(description="Company name")
@@ -8,16 +9,84 @@ class JobAnalysis(BaseModel):
         description="Required technical skills"
     )
 
+class ProjectExperience(BaseModel):
+    name: str = Field(
+        description="Project name"
+    )
+
+    project_type: Literal[
+        "university",
+        "personal",
+        "course_exercise"
+    ] = Field(
+        description="Origin of the project"
+    )
+
+    status: Literal[
+        "completed",
+        "in_progress"
+    ] = Field(
+        description="Current project status"
+    )
+
+    description: str = Field(
+        description="Short description of the project"
+    )
+
+    technologies: list[str] = Field(
+        description="Technologies used in the project"
+    )
+
+
+class SkillEvidence(BaseModel):
+    skill: str = Field(
+        description="Name of the technical skill"
+    )
+
+    source: str = Field(
+        description=(
+            "Exact employer or project name where the skill "
+            "was demonstrated, such as Nokia or Mini Data Pipeline. "
+            "Never use professional, project or learning as the source."
+        )
+    )
+
+    evidence_type: Literal[
+        "professional",
+        "project",
+        "learning"
+    ] = Field(
+        description="Experience category"
+    )
+
 class CVAnalysis(BaseModel):
-    name: str = Field(description="Candidate's name")
-    email: str | None = Field(default=None)
-    phone: str | None = Field(default=None)
+    name: str = Field(
+        description="Candidate name"
+    )
+
     skills: list[str] = Field(
-        description="List of candidate's technical skills"
+        description="All technical skills mentioned in the CV"
     )
+
     experience: list[str] = Field(
-        description="List of candidate's previous job experiences"
+        description="Professional work experience"
     )
+
+    education: list[str] = Field(
+        default_factory=list,
+        description="Education and qualifications"
+    )
+
+    projects: list[ProjectExperience] = Field(
+        default_factory=list,
+        description="Personal and university projects"
+    )
+
+    skill_evidence: list[SkillEvidence] = Field(
+        default_factory=list,
+        description="Evidence supporting technical skills"
+    )
+    languages: list[str] = Field(default_factory=list)
 
 class MatchAnalysis(BaseModel):
     matching_skills: list[str] = Field(
@@ -31,6 +100,16 @@ class MatchAnalysis(BaseModel):
     recommendation: str = Field(
         description="Short recommendation about whether to apply"
     )
-    score: float = Field(default=None, ge=0, le=10)
+    score: float | None = Field(default=None, ge=0, le=10)
     score_reason: str
     requirements: list[RequirementMatch]
+
+class JobPosting(BaseModel):
+    id: str
+    title: str
+    company: str
+    location: str
+    remote: bool | None = None
+    description: str
+    url: str
+    source: str

@@ -5,7 +5,7 @@ model = ChatOllama(
     model="qwen3.5:9b",
     temperature=0,
     reasoning=False,
-    num_predict=2048
+    num_predict=4096
 )
 
 with_structured_output = model.with_structured_output(
@@ -17,89 +17,58 @@ def analyze_match(job:JobAnalysis, cv:CVAnalysis) -> MatchAnalysis:
     """Analyze the match between a job description and a CV."""
 
     prompt = f"""
-    You are an AI assistant that evaluates how well a candidate's
-    CV matches the requirements of a job description.
+    You evaluate how well a candidate's CV matches a job.
 
-    Your task is to identify matching skills, missing skills,
-    and evaluate each job requirement individually.
-
-    JOB DESCRIPTION:
+    JOB:
     {job.model_dump_json(indent=2)}
 
-    CANDIDATE CV:
+    CV:
     {cv.model_dump_json(indent=2)}
 
-    INSTRUCTIONS:
+    TASK:
+    Evaluate every distinct job requirement.
 
-    1. Identify the skills that are present in both the job
-    description and the CV.
+    For each requirement, return a RequirementMatch entry:
+    - name: requirement name
+    - priority: "required" or "preferred"
+    - match: "full", "partial", "not_met", or "unknown"
+    - evidence: concrete supporting evidence or explanation
 
-    2. Identify the job requirements that are not explicitly
-    supported by the CV.
+    PRIORITY:
+    - required: explicitly mandatory
+    - preferred: optional, desirable, or unclear
 
-    3. For every distinct job requirement, create a
-    RequirementMatch entry.
+    MATCH CLASSIFICATION:
+    - full: CV clearly demonstrates the exact required capability
+    - partial: relevant transferable skills, but not full evidence
+    - not_met: CV explicitly proves the requirement is not met
+    - unknown: insufficient evidence
 
-    4. Classify each requirement's priority:
+    EVIDENCE RULES:
+    - Professional experience is stronger evidence than projects.
+    - Personal projects can demonstrate technical competence.
+    - Related technologies may justify partial matches.
+    - Do not equate personal projects with production experience.
+    - Consider explicit seniority and experience requirements.
+    - Do not infer language proficiency from location or education.
+    - Never invent qualifications.
+    - Do not treat missing CV information as proof of lacking a skill.
+    - Do not duplicate requirements.
+    - Do not invent requirements absent from the job.
 
-    - required: The job description explicitly states
-        that the requirement is mandatory.
-    - preferred: The requirement is explicitly described
-        as desirable, optional, or an advantage.
+    IMPORTANT:
+    Return a complete requirements list.
+    Every requirement must have a priority, match, and evidence.
+    This list is essential for Python scoring.
 
-    If the priority is unclear, use "preferred" and
-    explain the uncertainty in the evidence.
+    Also return:
+    - matching_skills: supported relevant skills
+    - missing_skills: requirements not fully demonstrated
+    - recommendation: short realistic evaluation
+    - score: 0
+    - score_reason: "Pending Python scoring"
 
-    5. Classify each requirement's match:
-
-    - full: The CV provides clear evidence that the
-        candidate meets the requirement.
-    - partial: The CV demonstrates related or
-        transferable skills.
-    - not_met: The available information explicitly
-        establishes that the requirement is not met.
-    - unknown: The CV does not provide sufficient
-        evidence to determine whether the requirement
-        is met.
-
-    6. Consider relationships between technologies.
-
-    For example:
-    - Jenkins can demonstrate CI/CD experience.
-    - Docker can demonstrate containerization skills.
-    - Experience with one cloud platform does not
-        automatically prove experience with another.
-
-    Evaluate these relationships based on evidence
-    rather than keyword matching alone.
-
-    7. Include evidence from the CV whenever available.
-    Do not invent skills, experience, or qualifications.
-
-    8. Evaluate each job requirement separately.
-    Do not count the same requirement more than once.
-
-    9. Do not treat missing CV information as proof
-    that the candidate lacks a skill.
-
-    10. Provide a short recommendation explaining
-        whether the candidate should consider applying.
-
-    11. Do not calculate the final suitability score.
-        Python will calculate it separately.
-
-        For compatibility with the current output schema,
-        set score to 0 and score_reason to
-        "Pending Python scoring".
-
-    12. Return all fields required by the output schema,
-        including:
-        - matching_skills
-        - missing_skills
-        - requirements
-        - recommendation
-        - score
-        - score_reason
+    Return all fields required by the schema.
     """
 
     result = with_structured_output.invoke(prompt)

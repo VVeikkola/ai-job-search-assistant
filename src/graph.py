@@ -3,56 +3,48 @@ from typing import TypedDict
 from langgraph.graph import StateGraph, START, END
 
 from src.job_analyzer import analyze_job
-from src.cv_analyzer import analyze_cv
 from src.match_analyzer import analyze_match
 from src.scoring import calculate_score
-
 from src.models import JobAnalysis, CVAnalysis, MatchAnalysis
+
 
 class JobSearchState(TypedDict, total=False):
     job_text: str
-    cv_text: str
-    job: JobAnalysis
     cv: CVAnalysis
+    job: JobAnalysis
     match: MatchAnalysis
     decision: str
     project_suggestion: str
+
 
 def job_node(state: JobSearchState):
     job = analyze_job(state["job_text"])
     return {"job": job}
 
 
-def cv_node(state: JobSearchState):
-    cv = analyze_cv(state["cv_text"])
-    return {"cv": cv}
-
-
 def match_node(state: JobSearchState):
     match = analyze_match(state["job"], state["cv"])
     return {"match": match}
+
 
 def score_node(state: JobSearchState):
     match = state["match"]
 
     result = calculate_score(match.requirements)
-
     score = result["score"]
 
     match.score = score
 
-    match.score_reason = (
-    "Calculated using weighted job requirements. "
-    "Required skills have weight 3 and preferred skills weight 1."
-    )
-
     if score is None:
         decision = "Not enough information"
         match.score_reason = "No job requirements available for scoring."
+
     elif score >= 7:
         decision = "Recommended to apply"
+
     elif score >= 5:
         decision = "Consider applying"
+
     else:
         decision = "Low priority"
 
@@ -64,8 +56,9 @@ def score_node(state: JobSearchState):
 
     return {
         "match": match,
-        "decision": decision
+        "decision": decision,
     }
+
 
 def project_node(state: JobSearchState):
     missing_skills = state["match"].missing_skills
@@ -74,62 +67,44 @@ def project_node(state: JobSearchState):
         suggestion = "No additional project needed."
     else:
         skills = ", ".join(missing_skills)
-        suggestion = f"Build a small GitHub project demonstrating: {skills}"
+
+        suggestion = (
+            f"Consider building a small portfolio project "
+            f"demonstrating: {skills}"
+        )
 
     return {"project_suggestion": suggestion}
 
+
 def route_by_score(state: JobSearchState):
-    if state["match"].score >= 7:
+    score = state["match"].score
+
+    if score is not None and score >= 5:
         return "project"
 
     return "end"
 
+
 builder = StateGraph(JobSearchState)
 
 builder.add_node("analyze_job", job_node)
-builder.add_node("analyze_cv", cv_node)
 builder.add_node("analyze_match", match_node)
 builder.add_node("score", score_node)
 builder.add_node("project", project_node)
 
 builder.add_edge(START, "analyze_job")
-builder.add_edge("analyze_job", "analyze_cv")
-builder.add_edge("analyze_cv", "analyze_match")
+builder.add_edge("analyze_job", "analyze_match")
 builder.add_edge("analyze_match", "score")
+
 builder.add_conditional_edges(
     "score",
     route_by_score,
     {
         "project": "project",
-        "end": END
-    }
+        "end": END,
+    },
 )
 
 builder.add_edge("project", END)
 
 graph = builder.compile()
-
-if __name__ == "__main__":
-
-    initial_state = {
-        "job_text": """
-        Twoday is looking for a Software Developer.
-        Required skills: Python, Azure, CI/CD.
-        """,
-
-        "cv_text": """
-        John Smith
-        Skills: Python, Docker, Jenkins.
-        Experience: Software Developer at Nokia.
-        """
-    }
-
-    result = graph.invoke(initial_state)
-
-    print("\nMATCH RESULT:")
-    print("DECISION:", result["decision"])
-
-    if "project_suggestion" in result:
-        print("PROJECT:", result["project_suggestion"])
-
-    print(result["match"].model_dump_json(indent=2))
